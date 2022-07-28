@@ -1,4 +1,4 @@
-! Alternativa con numero no representable -> prende el flag v
+! Alternativa con numeros representable -> prende el flag v
 
 .begin 
 	.org 2048
