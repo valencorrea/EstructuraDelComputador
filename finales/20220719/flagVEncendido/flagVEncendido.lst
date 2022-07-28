@@ -1,0 +1,67 @@
+(ARCTools Version 2.1.2)
+ HexLoc     DecLoc    MachWord   Label        Instruction                Comment
+                                              .org 2048                  
+                                                                         
+                                                                         
+                                                                         
+                                                                         !PPIO_DIREC .equ A2010h
+                                                                         !FIN_DIREC .equ B10h
+                                                                         
+                                              .equ 00000h                
+                                              .equ 010h                  
+                                                                         
+                                              .equ 2                     
+                                                                         
+00000800  0000002048  03000000                sethi 0, %r1               ! aca devuelvo si es o no represent
+00000804  0000002052  83286002                sll %r1, 2, %r1            
+00000808  0000002056  82006010                add %r1, 16, %r1           
+                                                                         
+                                                                         !add LARGO, %r8
+                                                                         !push 	
+                                                                         
+                                                                         !pop %r2 					! elementos que me faltan del array
+                                                                         !pop %r3						! proximo elemento a leer
+                                                                         
+0000080c  0000002060  84002002                add %r0, 2, %r2            
+00000810  0000002064  86002bb8                add %r0, 3000, %r3         
+                                                                         
+00000814  0000002068  8c000000                add %r0, %r0, %r6          ! suma acumulada
+00000818  0000002072  8e000000                add %r0, %r0, %r7          ! valor a retornar en periferico
+                                                                         
+0000081c  0000002076            loop:                                    
+00000820  0000002080  84a0a001                subcc %r2, 1, %r2          ! me fijo si tengo que seguir iterando
+00000824  0000002084  0c80000a                bneg 10                    ! salgo si es neg
+00000828  0000002088  d200c000                ld %r3, %r9                ! cargo el valor del elemento actual
+0000082c  0000002092  80824000                addcc %r9, %r0, %r0        
+00000830  0000002096  0c800002                bneg 2                     
+00000834  0000002100  8c824006                addcc %r9, %r6, %r6        ! sumo 
+                                                                         
+00000838  0000002104            is_neg:                                  
+0000083c  0000002108  8600e004                add %r3, 4, %r3            
+00000840  0000002112  1ebffff7                bvc -9                     
+00000844  0000002116  8e002001                add %r0, 1, %r7            
+00000848  0000002120  10bffff5                ba -11                     
+                                                                         
+0000084c  0000002124            exit:                                    
+00000850  0000002128  a003c000                add %r15, %r0, %r16        ! backup
+00000854  0000002132  40000002                call 2                     
+00000858  0000002136  81c42004                jmpl %r16, 4, %r0          
+                                                                         
+0000085c  0000002140            representable:                             
+00000860  0000002144  ce204000                st %r7, %r1                
+00000864  0000002148  81c3e004                jmpl %r15, 4, %r0          
+                                                                         
+                                              .org 3000                  
+00000bb8  0000003000  00000005  array:                                   
+00000bbc  0000003004  7fffffff                                           
+                                                                         
+
+--- Symbol Table ---
+PPIO_DIREC: 0
+loop: 2076
+representable: 2140
+exit: 2124
+is_neg: 2104
+FIN_DIREC: 16
+LARGO: 2
+array: 3000
