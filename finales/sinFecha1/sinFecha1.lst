@@ -1,0 +1,44 @@
+(ARCTools Version 2.1.2)
+ HexLoc     DecLoc    MachWord   Label        Instruction                Comment
+                                              .org 2048                  
+                                                                         
+                                                                         
+                                                                         
+00000800  0000002048  8a000000                add %r0, %r0, %r5          ! cantidad de guardados
+00000804  0000002052  8c002010                add %r0, 16, %r6           ! cant max vector
+00000808  0000002056  8e000000                add %r0, %r0, %r7          ! indice de la posicion actual del vector
+                                                                         
+0000080c  0000002060                          pop %r1                    ! guardo la direc del periferico
+0000080c  0000002060  c2038000                ld %r14, %r1               
+00000810  0000002064  9c03a004                add %r14, 4, %r14          
+00000814  0000002068  92002030                add %r0, 48, %r9           ! me guardo direc del array
+                                                                         
+00000818  0000002072            loop:                                    
+0000081c  0000002076  80a18005                subcc %r6, %r5, %r0        ! sigo teniendo lugar
+00000820  0000002080  0280000b                be 11                      ! se prende cuando es 0
+00000824  0000002084  c4004000                ld %r1, %r2                ! me guardo el valor del periferico 
+                                                                         ! asumimos que se va actualizando solo	
+                                                                         
+                                                                         
+00000828  0000002088  8738a00c                sra %r2, 12, %r3           ! me guardo las A
+                                                                         
+0000082c  0000002092  8928a014                sll %r2, 20, %r4           
+00000830  0000002096  89392014                sra %r4, 20, %r4           ! me guardo las B	
+                                                                         
+00000834  0000002100  80810000                addcc %r4, %r0, %r0        ! seteamos flags para el numero de 12
+00000838  0000002104  0cbffff8                bneg -8                    
+0000083c  0000002108  c8224000                st %r4, %r9                ! guardo el valor positivo en memoria ram
+00000840  0000002112  92026004                add %r9, 4, %r9            ! avanzo de posicion
+00000844  0000002116  8a016001                add %r5, 1, %r5            ! aumento los guardados
+00000848  0000002120  10bffff4                ba -12                     
+                                                                         
+0000084c  0000002124            exit:                                    
+00000850  0000002128  81c3e004                jmpl %r15, 4, %r0          
+                                                                         
+                                              .org 48                    
+00000030  0000000048            array:        .dwb 16                    
+
+--- Symbol Table ---
+loop: 2072
+exit: 2124
+array: 48

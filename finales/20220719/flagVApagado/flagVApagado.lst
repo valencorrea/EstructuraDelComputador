@@ -4,64 +4,41 @@
                                                                          
                                                                          
                                                                          
-                                                                         !PPIO_DIREC .equ A2010h
-                                                                         !FIN_DIREC .equ B10h
+00000800  0000002048  8a000000                add %r0, %r0, %r5          ! cantidad de guardados
+00000804  0000002052  8c002010                add %r0, 16, %r6           ! cant max vector
+00000808  0000002056  8e000000                add %r0, %r0, %r7          ! indice de la posicion actual del vector
                                                                          
-                                              .equ 00000h                
-                                              .equ 010h                  
+0000080c  0000002060                          pop %r1                    ! guardo la direc del periferico
+0000080c  0000002060  c2038000                ld %r14, %r1               
+00000810  0000002064  9c03a004                add %r14, 4, %r14          
                                                                          
-                                              .equ 2                     
+00000814  0000002068            loop:                                    
+00000818  0000002072  80a18005                subcc %r6, %r5, %r0        ! sigo teniendo lugar
+0000081c  0000002076  0280000a                be 10                      ! se prende cuando es 0
+00000820  0000002080  c4004000                ld %r1, %r2                ! me guardo el valor del periferico 
+                                                                         ! asumimos que se va actualizando solo	
                                                                          
-00000800  0000002048  03000000                sethi 0, %r1               ! aca devuelvo si es o no represent
-00000804  0000002052  83286002                sll %r1, 2, %r1            
-00000808  0000002056  82006010                add %r1, 16, %r1           
+00000824  0000002084  8738a00c                sra %r2, 12, %r3           ! me guardo las A
                                                                          
-                                                                         !add LARGO, %r8
-                                                                         !push 	
+00000000  0000000000                          sla                        
+ERROR on line above: Unknown macro: sla
+00000828  0000002088  89392014                sra %r4, 20, %r4           ! me guardo las B	
                                                                          
-                                                                         !pop %r2 					! elementos que me faltan del array
-                                                                         !pop %r3						! proximo elemento a leer
+0000082c  0000002092  80810000                addcc %r4, %r0, %r0        ! seteamos flags para el numero de 12
+00000830  0000002096  0cbffff9                bneg -7                    
+00000834  0000002100  c801ebb8                ld [3000], %r7, %r4        ! guardo el valor positivo
+00000838  0000002104  8e01e004                add %r7, 4, %r7            ! avanzo de posicion
+0000083c  0000002108  8a016001                add %r5, 1, %r5            ! aumento los guardados
+00000840  0000002112  10bffff5                ba -11                     
                                                                          
-0000080c  0000002060  84002002                add %r0, 2, %r2            
-00000810  0000002064  86002bb8                add %r0, 3000, %r3         
-                                                                         
-00000814  0000002068  8c000000                add %r0, %r0, %r6          ! suma acumulada
-00000818  0000002072  8e000000                add %r0, %r0, %r7          ! valor a retornar en periferico
-                                                                         
-0000081c  0000002076            loop:                                    
-00000820  0000002080  84a0a001                subcc %r2, 1, %r2          ! me fijo si tengo que seguir iterando
-00000824  0000002084  0c80000a                bneg 10                    ! salgo si es neg
-00000828  0000002088  d200c000                ld %r3, %r9                ! cargo el valor del elemento actual
-0000082c  0000002092  80824000                addcc %r9, %r0, %r0        
-00000830  0000002096  0c800002                bneg 2                     
-00000834  0000002100  8c824006                addcc %r9, %r6, %r6        ! sumo 
-                                                                         
-00000838  0000002104            is_neg:                                  
-0000083c  0000002108  8600e004                add %r3, 4, %r3            
-00000840  0000002112  1ebffff7                bvc -9                     
-00000844  0000002116  8e002001                add %r0, 1, %r7            
-00000848  0000002120  10bffff5                ba -11                     
-                                                                         
-0000084c  0000002124            exit:                                    
-00000850  0000002128  a003c000                add %r15, %r0, %r16        ! backup
-00000854  0000002132  40000002                call 2                     
-00000858  0000002136  81c42004                jmpl %r16, 4, %r0          
-                                                                         
-0000085c  0000002140            representable:                             
-00000860  0000002144  ce204000                st %r7, %r1                
-00000864  0000002148  81c3e004                jmpl %r15, 4, %r0          
+00000844  0000002116            exit:                                    
+00000848  0000002120  81c3e004                jmpl %r15, 4, %r0          
                                                                          
                                               .org 3000                  
-00000bb8  0000003000  00000005  array:                                   
-00000bbc  0000003004  fffffffd                                           
+00000bb8  0000003000            array:        .dwb 16                    
                                                                          
 
 --- Symbol Table ---
-PPIO_DIREC: 0
-loop: 2076
-representable: 2140
-exit: 2124
-is_neg: 2104
-FIN_DIREC: 16
-LARGO: 2
+loop: 2068
+exit: 2116
 array: 3000
