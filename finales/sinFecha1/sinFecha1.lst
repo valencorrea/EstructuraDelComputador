@@ -15,7 +15,7 @@
                                                                          
 00000818  0000002072            loop:                                    
 0000081c  0000002076  80a18005                subcc %r6, %r5, %r0        ! sigo teniendo lugar
-00000820  0000002080  0280000b                be 11                      ! se prende cuando es 0
+00000820  0000002080  0280000d                be 13                      ! se prende cuando es 0
 00000824  0000002084  c4004000                ld %r1, %r2                ! me guardo el valor del periferico 
                                                                          ! asumimos que se va actualizando solo	
                                                                          
@@ -26,19 +26,22 @@
 00000830  0000002096  89392014                sra %r4, 20, %r4           ! me guardo las B	
                                                                          
 00000834  0000002100  80810000                addcc %r4, %r0, %r0        ! seteamos flags para el numero de 12
-00000838  0000002104  0cbffff8                bneg -8                    
-0000083c  0000002108  c8224000                st %r4, %r9                ! guardo el valor positivo en memoria ram
-00000840  0000002112  92026004                add %r9, 4, %r9            ! avanzo de posicion
-00000844  0000002116  8a016001                add %r5, 1, %r5            ! aumento los guardados
-00000848  0000002120  10bffff4                ba -12                     
+00000838  0000002104                          push %r2                   
+00000838  0000002104  9c03bffc                add %r14, -4, %r14         
+0000083c  0000002108  c4238000                st %r2, %r14               
+00000840  0000002112  0cbffff6                bneg -10                   
+00000844  0000002116  c8224000                st %r4, %r9                ! guardo el valor positivo en memoria ram
+00000848  0000002120  92026004                add %r9, 4, %r9            ! avanzo de posicion
+0000084c  0000002124  8a016001                add %r5, 1, %r5            ! aumento los guardados
+00000850  0000002128  10bffff2                ba -14                     
                                                                          
-0000084c  0000002124            exit:                                    
-00000850  0000002128  81c3e004                jmpl %r15, 4, %r0          
+00000854  0000002132            exit:                                    
+00000858  0000002136  81c3e004                jmpl %r15, 4, %r0          
                                                                          
                                               .org 48                    
 00000030  0000000048            array:        .dwb 16                    
 
 --- Symbol Table ---
 loop: 2072
-exit: 2124
+exit: 2132
 array: 48
