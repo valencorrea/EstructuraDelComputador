@@ -31,7 +31,7 @@ loop:
 	sra %r4, 20, %r4				! me guardo las B	
 
 	addcc %r4, %r0, %r0				! seteamos flags para el numero de 12
-	push %r2						! devuelvo por stack el valor leido 
+	push %r2
 	bneg loop
 	st %r4, %r9					! guardo el valor positivo en memoria ram
 	add %r9, 4, %r9					! avanzo de posicion
