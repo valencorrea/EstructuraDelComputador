@@ -15,6 +15,10 @@
 	add %r14, 4, %r14
 	.endmacro
 
+	.macro calcular_promedio
+	srl %r3, 1, %r3		! divido por el total de elementos del vector
+	.endmacro
+
 PPIO_PERIFERICO .equ B7130h
 FIN_PERIFERICO .equ 0A1h
 
@@ -22,14 +26,16 @@ FIN_PERIFERICO .equ 0A1h
 	sll %r4, 2, %r4	
 	add %r4, FIN_PERIFERICO, %r4	! guardo la direccion del periferico
 	
-	pop %r1			! guardo direccion del arreglo
+	!pop %r1			! guardo direccion del arreglo
+	add %r0, array, %r1		! me guardo la direc del arreglo	
 
-	add %r0, 16, %r2	! guardo la cantidad de elementos del vector
+
+	add %r0, 2, %r2	! guardo la cantidad de elementos del vector
 	add %r0, %r0, %r3	! inicializo donde voy a ir calculando el promedio
 
 loop: 	
 	subcc %r2, 1, %r2	! me fijo si puedo seguir recorriendo el vector
-	be exit			! ya recorri todo el vector (be equals)
+	bneg exit			! ya recorri todo el vector (be equals)
 	
 	ld %r1, %r6		! guardo el valor del elemento actual
 	add %r6, %r3, %r3	! sumo el elemento actual a donde voy a calcular el promedio
@@ -38,11 +44,14 @@ loop:
 	ba loop			! avanzo el loop al siguiente elemento
 
 exit:
-	call calcular_promedio	! llamo a calcular el promedio por subrutina despues de que termino el loop	
+	calcular_promedio	! llamo a calcular el promedio por subrutina despues de que termino el loop	
 	st %r3, %r4		! guardo el promedio en la direccion del periferico
 
-calcular_promedio:	
-			srl %r3, 4, %r3		! divido por el total de elementos del vector
-			jmpl %r15, 4, %r0	! vuelvo a la linea siguiente del llamado
+	jmpl %r15, 4, %r0	
+
+	.org 3000
+array:   5
+	 4
+	
 
 	.end
