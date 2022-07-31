@@ -1,0 +1,59 @@
+(ARCTools Version 2.1.2)
+ HexLoc     DecLoc    MachWord   Label        Instruction                Comment
+                                              .org 2048                  
+                                                                         
+                                                                         
+                                                                         
+                                              .equ B7130h                
+                                              .equ 0A1h                  
+                                                                         
+00000800  0000002048  090b7130                sethi 749872, %r4          
+00000804  0000002052  89292002                sll %r4, 2, %r4            
+00000808  0000002056  880120a1                add %r4, 161, %r4          ! guardo la direccion del periferico
+                                                                         
+                                                                         !pop %r1			! guardo direccion del arreglo
+0000080c  0000002060  82002bb8                add %r0, 3000, %r1         ! me guardo la direc del arreglo	
+                                                                         
+                                                                         
+00000810  0000002064  84002002                add %r0, 2, %r2            ! guardo la cantidad de elementos del vector
+00000814  0000002068  86000000                add %r0, %r0, %r3          ! inicializo donde voy a ir calculando el promedio
+00000818  0000002072  96002001                add %r0, 1, %r11           !inicializo comparador de numeros impares
+                                                                         
+0000081c  0000002076            loop:                                    
+00000820  0000002080  84a0a001                subcc %r2, 1, %r2          ! me fijo si puedo seguir recorriendo el vector
+00000824  0000002084  0c80000a                bneg 10                    ! ya recorri todo el vector (be equals)
+                                                                         
+00000828  0000002088  cc004000                ld %r1, %r6                ! guardo el valor del elemento actual
+                                                                         
+0000082c  0000002092  9529a01f                sll %r6, 31, %r10          ! me guardo el bit menos significativo en r10
+00000830  0000002096  9532a01f                srl %r10, 31, %r10         ! lo dejo en el bit menos significativo
+00000834  0000002100  80a2800b                subcc %r10, %r11, %r0      ! seteo flags
+00000838  0000002104  02800002                be 2                       
+                                                                         
+0000083c  0000002108  86018003                add %r6, %r3, %r3          ! sumo el elemento actual a donde voy a calcular el promedio
+                                                                         ! si es impar me salteo esta linea		
+                                                                         
+00000840  0000002112            numero_impar:                             
+00000844  0000002116  82006004                add %r1, 4, %r1            ! avanzo a la siguiente posicion del vector
+00000848  0000002120  10bffff5                ba -11                     ! avanzo el loop al siguiente elemento
+                                                                         
+0000084c  0000002124            exit:                                    
+00000000  0000000000                          calcular_promedio          ! llamo a calcular el promedio por subrutina despues de que termino el loop	
+00000850  0000002128  8730e001                srl %r3, 1, %r3            ! divido por el total de elementos del vector
+00000854  0000002132  c6210000                st %r3, %r4                ! guardo el promedio en la direccion del periferico
+                                                                         
+00000858  0000002136  81c3e004                jmpl %r15, 4, %r0          
+                                                                         
+                                              .org 3000                  
+00000bb8  0000003000  00000005  array:                                   
+00000bbc  0000003004  00000004                                           
+                                                                         
+                                                                         
+
+--- Symbol Table ---
+loop: 2076
+exit: 2124
+PPIO_PERIFERICO: 749872
+numero_impar: 2112
+FIN_PERIFERICO: 161
+array: 3000
