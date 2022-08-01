@@ -28,20 +28,20 @@
 00000838  0000002104  8600e004                add %r3, 4, %r3            ! avanzo al sig elemento del vector	
 0000083c  0000002108  10bffffa                ba -6                      
                                                                          
-00000840  0000002112                          push %r4                   ! devuelvo el promedio
+00000840  0000002112                          push %r4                   ! devuelvo el promedio         
 00000840  0000002112  9c03bffc                add %r14, -4, %r14         
 00000844  0000002116  c8238000                st %r4, %r14               
 00000848  0000002120  81c3e004                jmpl %r15, 4, %r0          
                                                                          
 0000084c  0000002124            exit_loop:                               
-00000850  0000002128                          push %r6                   ! mando direccion del arreglo
+00000850  0000002128                          push %r6                   ! mando direccion del arreglo             
 00000850  0000002128  9c03bffc                add %r14, -4, %r14         
 00000854  0000002132  cc238000                st %r6, %r14               
 00000858  0000002136  a003c000                add %r15, %r0, %r16        ! backup del pc
 0000085c  0000002140  40000001                call 1                     
                                                                          
 00000860  0000002144            calcular_promedio:                             
-00000864  0000002148                          pop %r6                    ! agarro direc del arreglo
+00000864  0000002148                          pop %r6                    ! agarro direc del arreglo        
 00000864  0000002148  cc038000                ld %r14, %r6               
 00000868  0000002152  9c03a004                add %r14, 4, %r14          
 0000086c  0000002156  84002002                add %r0, 2, %r2            ! vuelvo a setear el tope del array	
@@ -59,7 +59,6 @@
 00000894  0000002196  10bffff7                ba -9                      
                                                                          
 00000898  0000002200            fin_del_programa:                             
-                                                                         !sll %r4, 5, %r4			! divido por 32
 0000089c  0000002204  89392001                sra %r4, 1, %r4            ! divido por 2
                                                                          
                                                                          
@@ -71,12 +70,10 @@
 000008b0  0000002224                          push %r4                   
 000008b0  0000002224  9c03bffc                add %r14, -4, %r14         
 000008b4  0000002228  c8238000                st %r4, %r14               
-                                                                         
 000008b8  0000002232  81c42004                jmpl %r16, 4, %r0          
                                                                          
                                               .org 48                    ! = 00000030h
 00000030  0000000048            array:        .dwb 2                     
-                                                                         
 
 --- Symbol Table ---
 PPIO_PERIFERICO: 0
